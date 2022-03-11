@@ -14,6 +14,10 @@ config/name="Ultimate Battle"
 run/main_scene="res://Scenes/Scene02.tscn"
 config/icon="res://icon.png"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/MagicaVoxel_Importer_with_Extensions/plugin.cfg" )
+
 [input]
 
 ui_1={

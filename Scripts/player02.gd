@@ -20,9 +20,10 @@ func _physics_process(delta):
 		steer_target = steer_target + (0 - steer_target) * rot_weight
 	# recupere la normale sous le player si elle existe
 	var normal  = $RayCast.get_collision_normal() 
-	# si elle existe pas on vise le centre de gravité de la planete
+	# si elle existe pas on vise le centre de gravité de la planete ou le vecteur Up
 	if !normal:
-		normal = (gravityPlanete - self.translation).normalized()
+		normal = Vector3.UP # UP
+#		normal = ( self.translation - gravityPlanete).normalized() # planet center of gravity
 
 	#  setup the gravity pointing invert the raycast normal
 	gravity =  - normal * mass
@@ -30,7 +31,7 @@ func _physics_process(delta):
 	# receiving the input
 	get_input(delta)
 	# add the gravity to the velocity
-	velocity += gravity * delta * mass
+	velocity += gravity  * mass
 	# move to forward + gravity
 	velocity = move_and_slide_with_snap(velocity * speed,Vector3.DOWN,Vector3.UP)
 	
@@ -40,7 +41,7 @@ func _physics_process(delta):
 	# realigne l'axe y en fonction de la normal
 	var xform = align_with_y(self.global_transform,normal)
 	# interpole l'ancienne et la nouvelle valeur
-	self.global_transform = self.global_transform.interpolate_with(xform, 0.2)
+	self.global_transform = self.global_transform.interpolate_with(xform, 0.1)
 
 	
 func get_input(delta):
@@ -78,10 +79,10 @@ func get_input(delta):
 		pass
 	# roll           
 	self.rotation_degrees.z = steer_target * 1000
-#	self.rotate_z(steer_target)
 	# yaw
 	self.rotate_y( steer_target)
 	# pitch
+	
 
 func align_with_y(xform, new_y):
 	xform.basis.y = new_y
@@ -92,4 +93,5 @@ func jump():
 	print("i'm jumpin")
 	# renverse la gravité
 	velocity += self.transform.basis.y * jump_power
+
 	pass

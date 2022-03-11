@@ -1,0 +1,16 @@
+[remap]
+
+importer="MagicaVoxel.With.Extensions"
+type="Mesh"
+path="res://.import/plateau01.vox-1d516e1997c52b703e69bb9b6063ddba.mesh"
+
+[deps]
+
+source_file="res://Assets/VOX/plateau01.vox"
+dest_files=[ "res://.import/plateau01.vox-1d516e1997c52b703e69bb9b6063ddba.mesh" ]
+
+[params]
+
+Scale=0.1
+GreedyMeshGenerator=true
+SnapToGround=true
