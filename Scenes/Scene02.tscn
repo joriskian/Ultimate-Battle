@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scenes/macchi-m5.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/player02.gd" type="Script" id=2]
 [ext_resource path="res://Scripts/cameras.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/Gravats.gd" type="Script" id=4]
 [ext_resource path="res://Scenes/plateau01.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Scenes/planet01.tscn" type="PackedScene" id=6]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 150.0
@@ -61,6 +62,7 @@ gravity_point = true
 shape = SubResource( 1 )
 
 [node name="StaticBodyPlanete" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 675 )
 
 [node name="PlanetCol100" type="CollisionShape" parent="StaticBodyPlanete"]
 shape = SubResource( 2 )
@@ -73,34 +75,37 @@ mesh = SubResource( 3 )
 material/0 = SubResource( 6 )
 
 [node name="player" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 103.39, -6 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 516.39, -6 )
 script = ExtResource( 2 )
-speed = 8.0
-rot_speed = 1.8
 jump_power = 15.0
 mass = 15.0
+rotation_speed = 0.2
+rot_weight = 0.05
+steer_limit = 0.08
 
 [node name="RayCast" type="RayCast" parent="player"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.950813, 0 )
 enabled = true
-cast_to = Vector3( 0, -50, 0 )
+cast_to = Vector3( 0, -200, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="player"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.196053, 0.518992 )
 shape = SubResource( 7 )
 
 [node name="positionCamera" type="Position3D" parent="player"]
-transform = Transform( 1, 0, 0, 0, 0.799381, 0.600825, 0, -0.600825, 0.799381, 0, 13.3002, 17.9435 )
+transform = Transform( 1, 0, 0, 0, 0.992697, 0.120639, 0, -0.120639, 0.992697, 0, 8.30017, 17.9435 )
 
 [node name="Camera" type="Camera" parent="player/positionCamera"]
 current = true
+far = 1000.0
 
 [node name="GlobalCamera" type="Camera" parent="."]
-transform = Transform( 0.00235618, 0, -0.999997, 0, 1, 0, 0.999997, 0, 0.00235618, -934.217, 9.24023, 1.47278 )
+transform = Transform( 0.00235618, 0, -0.999997, 0, 1, 0, 0.999997, 0, 0.00235618, -2120.22, 142.24, 1.47278 )
 fov = 23.3
 far = 5000.0
 
 [node name="InterpolatedCamera" type="InterpolatedCamera" parent="."]
+far = 1000.0
 target = NodePath("../player/positionCamera")
 speed = 8.0
 enabled = true
@@ -121,3 +126,6 @@ mesh = SubResource( 12 )
 material/0 = null
 
 [node name="plateau01" parent="." instance=ExtResource( 5 )]
+
+[node name="planet01" parent="." instance=ExtResource( 6 )]
+transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -353, 1131 )

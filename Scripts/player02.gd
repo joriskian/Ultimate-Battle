@@ -2,15 +2,22 @@ extends KinematicBody
 
 #export var gravity = Vector3.DOWN * 10 # the gravity vector * 9.85
 export var speed:float = 5.0
-export var rot_speed:float = 0.85 # how fast he rotate
 export var jump_power:float = 5 # how fast we can jump
 export var mass:float = 5 # the mass of the object
+export var rotation_speed:float = 1.0 # how fast he rotate
+export var rot_weight:float = 0.1
+export var steer_limit:float = 0.03
 
 var gravityPlanete:Vector3 = Vector3.ZERO
 var velocity = Vector3.ZERO
 var gravity:Vector3 = Vector3.ZERO
+var rollBack:bool = false
+var steer_target:float = 0.0
 
 func _physics_process(delta):
+	# remets l'avion en assiette
+	if rollBack:
+		steer_target = steer_target + (0 - steer_target) * rot_weight
 	# recupere la normale sous le player si elle existe
 	var normal  = $RayCast.get_collision_normal() 
 	# si elle existe pas on vise le centre de gravité de la planete
@@ -42,14 +49,19 @@ func get_input(delta):
 #	# annule speed
 	velocity = Vector3.ZERO
 	
-	# Gestion des Touches <  > gauche et droite
+	# gestion des touches < > gauche/droite
 	if Input.is_action_pressed("ui_left"):
-		# tourne l'objet localement son axe y (gravity)
-		self.rotate_object_local(Vector3.UP,rot_speed * delta)
-		# animation pour le roll
+		rollBack = false
+		steer_target += rotation_speed * delta
+		steer_target = clamp(steer_target,-steer_limit, steer_limit)
 	if Input.is_action_pressed("ui_right"):
-		# tourne l'objet localement son axe y (gravity)
-		self.rotate_object_local(Vector3.UP, - rot_speed * delta)
+		rollBack = false
+		steer_target +=  -rotation_speed * delta
+		steer_target = clamp(steer_target, -steer_limit ,steer_limit)
+	if Input.is_action_just_released("ui_left"):
+		rollBack = true
+	if Input.is_action_just_released("ui_right"):
+		rollBack = true
 	
 	# Gestion des Touches ^  ^ avance recule
 	if Input.is_action_pressed("ui_up"):
@@ -64,6 +76,12 @@ func get_input(delta):
 		# jump to the next collision shape
 		jump()
 		pass
+	# roll           
+	self.rotation_degrees.z = steer_target * 1000
+#	self.rotate_z(steer_target)
+	# yaw
+	self.rotate_y( steer_target)
+	# pitch
 
 func align_with_y(xform, new_y):
 	xform.basis.y = new_y
